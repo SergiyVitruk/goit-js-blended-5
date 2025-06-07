@@ -1,11 +1,11 @@
 {
-  "name": "notes_books_v2",
+  "name": "goit-js-blended-5",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base=/notes_books_v2/",
+    "build": "vite build --base=/goit-js-blended-5/",
     "preview": "vite preview"
   },
   "devDependencies": {
