@@ -1,16 +1,49 @@
-/*
-  Створи список справ.
-  На сторінці є два інпути які має вводиться назва і текст задачі.
-  Після натискання на кнопку "Add" завдання додається до списку #task-list.
+import { refs } from './js/refs.js';
+import {
+  createTask,
+  addTask,
+  getTasks,
+  setTasks,
+  removeTask,
+} from './js/tasks.js';
+import {
+  saveTasksToStorage,
+  loadTasksFromStorage,
+} from './js/local-storage-api.js';
+import { renderTasks } from './js/render-tasks.js';
+import { initThemeSwitcher } from './js/theme-switcher.js';
 
-  У кожної картки має бути кнопка "Delete", щоб можна було
-  прибрати завдання зі списку.
-  Список із завданнями має бути доступним після перезавантаження сторінки.
+const savedTasks = loadTasksFromStorage();
+setTasks(savedTasks);
+renderTasks();
 
-  Розмітка картки задачі
-  <li class="task-list-item">
-      <button class="task-list-item-btn">Delete</button>
-      <h3>Заголовок</h3>
-      <p>Текст</p>
-  </li>
-*/
+refs.form.addEventListener('submit', event => {
+  event.preventDefault();
+
+  const title = event.target.elements.taskName.value.trim();
+  const description = event.target.elements.taskDescription.value.trim();
+
+  if (!title || !description) {
+    return alert('Fill all fields!');
+  }
+
+  const task = createTask(title, description);
+  addTask(task);
+  saveTasksToStorage(getTasks());
+  renderTasks();
+
+  event.target.reset();
+});
+
+refs.list.addEventListener('click', event => {
+  if (event.target.classList.contains('task-list-item-btn')) {
+    const li = event.target.closest('.task-list-item');
+    const id = li.dataset.id;
+
+    removeTask(id);
+    saveTasksToStorage(getTasks());
+    renderTasks();
+  }
+});
+
+initThemeSwitcher();
